@@ -1,0 +1,6 @@
+*.a filter=lfs diff=lfs merge=lfs -text
+libbitcoinconsensus.a filter=lfs diff=lfs merge=lfs -text
+libbitcoin_crypto.a filter=lfs diff=lfs merge=lfs -text
+libbitcoinqt.a filter=lfs diff=lfs merge=lfs -text
+libbitcoin_server.a filter=lfs diff=lfs merge=lfs -text
+src/libbitcoin_server.a filter=lfs diff=lfs merge=lfs -text
