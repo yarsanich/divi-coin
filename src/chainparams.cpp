@@ -51,31 +51,30 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
 //   (no blocks before with a timestamp after, none after with
 //    timestamp before)
 // + Contains no strange transactions
-static Checkpoints::MapCheckpoints mapCheckpoints =
-boost::assign::map_list_of
-static const Checkpoints::CCheckpointData data = {
-    &mapCheckpoints,
-   // 1493667067, // * UNIX timestamp of last checkpoint block
-   // 1157185,    // * total number of transactions between genesis and last checkpoint
-                //   (the tx=... number in the SetBestChain debug.log lines)
-   // 2000        // * estimated number of transactions per day after checkpoint
-};
+// static Checkpoints::MapCheckpoints mapCheckpoints = boost::assign::map_list_of
+// static const Checkpoints::CCheckpointData data = {
+//     &mapCheckpoints,
+//    1493667067, // * UNIX timestamp of last checkpoint block
+//    1157185,    // * total number of transactions between genesis and last checkpoint
+//                //      (the tx=... number in the SetBestChain debug.log lines)
+//    2000        // * estimated number of transactions per day after checkpoint
+// };
 
 static Checkpoints::MapCheckpoints mapCheckpointsTestnet =
     boost::assign::map_list_of(0, uint256("0x"));
 static const Checkpoints::CCheckpointData dataTestnet = {
     &mapCheckpointsTestnet,
-   // 1454124731,
-   // 0,
-   // 250};
+   1454124731,
+   0,
+   250};
 
 static Checkpoints::MapCheckpoints mapCheckpointsRegtest =
     boost::assign::map_list_of(0, uint256("0x"));
 static const Checkpoints::CCheckpointData dataRegtest = {
     &mapCheckpointsRegtest,
-   // 1454124731,
-   // 0,
-   // 100};
+   1454124731,
+   0,
+   100};
 
 class CMainParams : public CChainParams
 {
@@ -171,12 +170,12 @@ public:
         nStartMasternodePayments = 1403728576; //Wed, 25 Jun 2014 20:36:16 GMT
     }
 
-    const Checkpoints::CCheckpointData& Checkpoints() const
-    {
-        return data;
-    }
+    // const Checkpoints::CCheckpointData& Checkpoints() const
+    // {
+    //     return data;
+    // }
 };
-static CMainParams mainParams;
+static CMainParams* mainParams;
 
 /**
  * Testnet (v3)
@@ -320,11 +319,11 @@ public:
         fMineBlocksOnDemand = true;
     }
 
-    const Checkpoints::CCheckpointData& Checkpoints() const
-    {
-        // UnitTest share the same checkpoints as MAIN
-        return data;
-    }
+    // const Checkpoints::CCheckpointData& Checkpoints() const
+    // {
+    //     // UnitTest share the same checkpoints as MAIN
+    //     return data;
+    // }
 
     //! Published setters to allow changing values in unit test cases
     virtual void setSubsidyHalvingInterval(int anSubsidyHalvingInterval) { nSubsidyHalvingInterval = anSubsidyHalvingInterval; }
@@ -335,17 +334,17 @@ public:
     virtual void setAllowMinDifficultyBlocks(bool afAllowMinDifficultyBlocks) { fAllowMinDifficultyBlocks = afAllowMinDifficultyBlocks; }
     virtual void setSkipProofOfWorkCheck(bool afSkipProofOfWorkCheck) { fSkipProofOfWorkCheck = afSkipProofOfWorkCheck; }
 };
-static CUnitTestParams unitTestParams;
+static CUnitTestParams* unitTestParams;
 
 
 static CChainParams* pCurrentParams = 0;
-
-CModifiableParams* ModifiableParams()
-{
-    assert(pCurrentParams);
-    assert(pCurrentParams == &unitTestParams);
-    return (CModifiableParams*)&unitTestParams;
-}
+//
+// CModifiableParams* ModifiableParams()
+// {
+//     assert(pCurrentParams);
+//     assert(pCurrentParams == &unitTestParams);
+//     return (CModifiableParams*)&unitTestParams;
+// }
 
 const CChainParams& Params()
 {
@@ -357,16 +356,17 @@ CChainParams& Params(CBaseChainParams::Network network)
 {
     switch (network) {
     case CBaseChainParams::MAIN:
-        return mainParams;
+        return *mainParams;
     case CBaseChainParams::TESTNET:
         return testNetParams;
     case CBaseChainParams::REGTEST:
         return regTestParams;
     case CBaseChainParams::UNITTEST:
-        return unitTestParams;
-    default:
+        return *unitTestParams;
+    default:{
         assert(false && "Unimplemented network");
-        return mainParams;
+        return *mainParams;
+    }
     }
 }
 
